@@ -35,7 +35,7 @@ function Navbar() {
 
                     <Separator orientation="vertical" className="w-[1px] h-8" />
 
-                    <Link href={`/Profile/${session?.data?.id}`} className="flex items-center justify-center gap-4">
+                    <Link href={`/Dashboard/Profile/${session?.data?.id}`} className="flex items-center justify-center gap-4">
                         <Avatar>
                             <AvatarImage src={session?.data?.avatar} alt="@shadcn" />
                             <AvatarFallback>CN</AvatarFallback>
