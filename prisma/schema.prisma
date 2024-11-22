@@ -8,79 +8,164 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  fullname  String
-  rollno    String   @unique // Used for login
-  mobileNo  String   @unique
-  email     String   @unique
-  password  String // Hashed password
-  avatar    String? // Profile image URL
-  topSkills String[] // Array of top 3 skills
-  shortBio  String?
-  about     String?
-  skills    String[] // Array of all skills
-
-  following Follow[] @relation("UserFollowing")
-  followers Follow[] @relation("UserFollowers")
-
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  fullname    String
+  rollno      String        @unique // Used for login
+  mobileNo    String        @unique
+  email       String        @unique
+  password    String // Hashed password
+  avatar      String?       @default("https://images.unsplash.com/photo-1575995872537-3793d29d972c") // Profile image URL
+  topSkills   String[] // Array of top 3 skills
+  shortBio    String?
+  about       String?
+  skills      Skills[] // Array of all skills
+  following   Follow[]      @relation("UserFollowing")
+  followers   Follow[]      @relation("UserFollowers")
   projects    Project[]
   experiences Experience[]
+  normalPost  NormalPost[]
+  jobPost     JobPost[]
+  projPost    ProjectPost[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
 
+model NormalPost {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  content   String
+  likes     Int        @default(0)
+  shares    Int        @default(0)
+  comments  NComment[]
+  User      User?      @relation(fields: [userId], references: [id])
+  userId    String?    @db.ObjectId
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model ProjectPost {
+  id             String     @id @default(auto()) @map("_id") @db.ObjectId
+  title          String
+  content        String
+  techStack      String
+  submissionDate String
+  likes          Int        @default(0)
+  shares         Int        @default(0)
+  comments       PComment[]
+  collab         String[]
+  User           User?      @relation(fields: [userId], references: [id])
+  userId         String?    @db.ObjectId
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+}
+
+model JobPost {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  company     String
+  joiningDate String
+  content     String
+  salary      String
+  title       String
+  location    String
+  role        String
+  likes       Int        @default(0)
+  shares      Int        @default(0)
+  applies     String[]
+  comments    JComment[]
+  User        User?      @relation(fields: [userId], references: [id])
+  userId      String?    @db.ObjectId
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model JComment {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  message   String
+  JobPost   JobPost? @relation(fields: [jobPostId], references: [id])
+  jobPostId String?  @db.ObjectId
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Follow {
-  id          String @id @default(auto()) @map("_id") @db.ObjectId
-  followerId  String @db.ObjectId
-  followingId String @db.ObjectId
+model PComment {
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  message       String
+  ProjectPost   ProjectPost? @relation(fields: [projectPostId], references: [id])
+  projectPostId String?      @db.ObjectId
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
 
-  follower  User @relation("UserFollowers", fields: [followerId], references: [id])
-  following User @relation("UserFollowing", fields: [followingId], references: [id])
+model NComment {
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
+  message      String
+  NormalPost   NormalPost? @relation(fields: [normalPostId], references: [id])
+  normalPostId String?     @db.ObjectId
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
 
+model Skills {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  subject   String
+  fullMark  Int
+  A         Int
+  userId    String?  @db.ObjectId
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  User      User?    @relation(fields: [userId], references: [id])
+}
+
+model Follow {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  followerId  String   @db.ObjectId
+  followingId String   @db.ObjectId
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  follower    User     @relation("UserFollowers", fields: [followerId], references: [id])
+  following   User     @relation("UserFollowing", fields: [followingId], references: [id])
 }
 
 model Project {
   id          String             @id @default(auto()) @map("_id") @db.ObjectId
-  name        String?
-  description String?
+  name        String
+  description String
   techstack   ProjectTechStack[] // Technologies used in the project
   github      String? // GitHub link
   link        String? // Live project link
-
-  userId String @db.ObjectId
-  user   User   @relation(fields: [userId], references: [id])
-
-  createdAt DateTime @default(now())
+  userId      String             @db.ObjectId
+  user        User               @relation(fields: [userId], references: [id])
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
 }
 
 model ProjectTechStack {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String?
-  Project   Project? @relation(fields: [projectId], references: [id])
+  name      String
   projectId String?  @db.ObjectId
+  Project   Project? @relation(fields: [projectId], references: [id])
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model ExperienceTechStack {
   id           String      @id @default(auto()) @map("_id") @db.ObjectId
-  name         String?
+  name         String
   createdAt    DateTime    @default(now())
-  Experience   Experience? @relation(fields: [experienceId], references: [id])
+  updatedAt    DateTime    @updatedAt
   experienceId String?     @db.ObjectId
+  Experience   Experience? @relation(fields: [experienceId], references: [id])
 }
 
 model Experience {
   id          String                @id @default(auto()) @map("_id") @db.ObjectId
-  companyName String?
-  position    String?
-  description String?
+  companyName String
+  position    String
+  description String
   techstack   ExperienceTechStack[] // Tools/Technologies used
   link        String? // Link to company or work
-
-  userId String @db.ObjectId
-  user   User   @relation(fields: [userId], references: [id])
-
-  createdAt DateTime @default(now())
+  userId      String                @db.ObjectId
+  user        User                  @relation(fields: [userId], references: [id])
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
 }

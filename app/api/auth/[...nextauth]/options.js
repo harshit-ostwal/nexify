@@ -7,25 +7,39 @@ export const authOptions = {
         CredentialsProvider({
             name: "credentials",
             credentials: {},
-
             async authorize(credentials) {
                 const { rollno, password } = credentials;
 
+                // Validate input
+                if (!rollno || !password) {
+                    throw new Error(JSON.stringify({
+                        status: 400,
+                        message: "Roll number and password are required",
+                    }));
+                }
+
+                // Find user by roll number
                 const user = await prisma.user.findUnique({
-                    where: {
-                        rollno: rollno
-                    },
-                });
+                    where: { rollno },
+                }).catch(() => null);
 
                 if (!user) {
-                    return null;
+                    throw new Error(JSON.stringify({
+                        status: 404,
+                        message: "User not found",
+                    }));
                 }
 
+                // Validate password
                 const isPasswordValid = await bcrypt.compare(password, user.password);
                 if (!isPasswordValid) {
-                    return null;
+                    throw new Error(JSON.stringify({
+                        status: 401,
+                        message: "Invalid credentials",
+                    }));
                 }
 
+                // Return user data
                 return user;
             }
         }),
@@ -38,9 +52,6 @@ export const authOptions = {
     },
     callbacks: {
         async jwt({ user, token }) {
-
-            console.log(user);
-
             if (user) {
                 token.userId = user.id;
                 token.fullname = user.fullname;
@@ -53,7 +64,6 @@ export const authOptions = {
                 token.followers = user.followers || [];
                 token.following = user.following || [];
             }
-
             return token;
         },
         async session({ session, token }) {
@@ -71,7 +81,6 @@ export const authOptions = {
                     following: token.following,
                 };
             }
-
             return session;
         },
     },

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 function SignIn() {
   const [rollno, setRollNo] = useState('');
@@ -15,16 +16,27 @@ function SignIn() {
 
   const handleSignIn = async (e) => {
     e.preventDefault();
-    const res = await signIn('credentials', {
-      redirect: false,
-      rollno,
-      password,
-    });
 
-    if (res) {
-      router.push('/Dashboard');
+    try {
+      const res = await signIn('credentials', {
+        redirect: false,
+        rollno,
+        password,
+      });
+
+      if (res && res.ok) {
+        toast.success("Sign In Successful!");
+        router.push('/Dashboard');
+      } else if (res && res.error) {
+        const errorMessage = JSON.parse(res.error)?.message || "Invalid credentials.";
+        toast.error(errorMessage);
+      } else {
+        toast.error("Sign In Failed. Please try again.");
+      }
+    } catch (err) {
+      toast.error("An unexpected error occurred. Please try again.");
+      console.error(err);
     }
-
   };
 
   return (

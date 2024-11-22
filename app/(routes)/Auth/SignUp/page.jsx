@@ -6,6 +6,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 function SignUp() {
   const router = useRouter(); // Move useRouter() here
@@ -32,11 +33,13 @@ function SignUp() {
 
     if (password !== confirmPassword) {
       setError('Passwords do not match');
+      toast.error("Passwords do not match")
       return;
     }
 
+
     try {
-      const response = await axios.post('/api/auth/SignUp', {
+      const res = await axios.post("/api/auth/SignUp", {
         fullname,
         rollno,
         mobileNo,
@@ -44,11 +47,17 @@ function SignUp() {
         password,
       });
 
-      if (response) {
-        router.push('/Auth/SignIn');
+      if (res.status === 201) {
+        toast.success("Sign Up Successful!");
+        router.push("/Auth/SignIn");
+      } else {
+        toast.error("Sign Up Unsuccessful!");
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Something went wrong.');
+      const errorMessage = err.response?.data?.message || "Something went wrong.";
+      setError(errorMessage);
+      toast.error(errorMessage);
+      router.push("/Auth/SignIn");
     }
   };
 

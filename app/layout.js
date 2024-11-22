@@ -1,6 +1,7 @@
 import { NextAuthProvider } from "@/providers/nextAuth-provider";
 import "./globals.css";
 import localFont from "next/font/local";
+import { Toaster } from "@/components/ui/sonner";
 
 export const gilroy = localFont({
   src: [
@@ -26,6 +27,7 @@ export default function RootLayout({ children }) {
         <NextAuthProvider>
           {children}
         </NextAuthProvider>
+        <Toaster />
       </body>
     </html >
   );

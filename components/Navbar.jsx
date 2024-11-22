@@ -10,18 +10,12 @@ function Navbar() {
 
     const { session, handleSignOut } = useUser();
 
-    const random = 12;
-
     return (
         <div className="sticky top-0 left-0 z-50 flex items-center justify-center w-full p-5 bg-white border-b shadow-sm">
             <div className="flex items-center justify-around flex-1">
                 <div className="flex items-center gap-8">
                     <Link href={"/"} className="text-3xl font-black">Nexify</Link>
                 </div>
-
-                <button onClick={() => handleSignOut()}>
-                    logout
-                </button>
 
                 <div className="flex items-center gap-6">
                     <div className="items-center justify-center hidden gap-8 md:flex">
@@ -41,9 +35,9 @@ function Navbar() {
 
                     <Separator orientation="vertical" className="w-[1px] h-8" />
 
-                    <Link href={`/Dashboard/Profile/${random}`} className="flex items-center justify-center gap-4">
+                    <Link href={`/Profile/${session?.data?.id}`} className="flex items-center justify-center gap-4">
                         <Avatar>
-                            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                            <AvatarImage src={session?.data?.avatar} alt="@shadcn" />
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
                         <div className="flex-col hidden gap-1 text-sm leading-none xl:flex">
