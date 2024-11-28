@@ -98,19 +98,22 @@ function page() {
     joiningDate: "",
     location: "",
     role: "",
-    salary: ""
+    salary: "",
+    imageUrl: "",
   });
 
   const [formData2, setFormData2] = useState({
     title: "",
     content: "",
+    imageUrl: "",
   });
 
   const [formData1, setFormData1] = useState({
     title: "",
     content: "",
     submissionDate: "",
-    techStack: ""
+    techStack: "",
+    imageUrl: "",
   });
 
   const handleChange = (e) => {
@@ -242,6 +245,19 @@ function page() {
                         onChange={handleChange2}
                       ></textarea>
                     </div>
+                    <div className="grid items-center grid-cols-4 gap-4">
+                      <Label htmlFor="image-url" className="text-right w-fit">
+                        Image URL
+                      </Label>
+                      <Input
+                        id="image-url"
+                        name="imageUrl"
+                        placeholder="Enter the URL of the image"
+                        value={formData2.imageUrl}
+                        onChange={handleChange2}
+                        className="col-span-3"
+                      />
+                    </div>
                     <DialogClose asChild>
                       <Button type="submit" onSubmit={handleNormal}>Post</Button>
                     </DialogClose>
@@ -315,6 +331,19 @@ function page() {
                         value={formData1.content}
                         onChange={handleChange1}
                       ></textarea>
+                    </div>
+                    <div className="grid items-center grid-cols-4 gap-4">
+                      <Label htmlFor="image-url" className="text-right w-fit">
+                        Image URL
+                      </Label>
+                      <Input
+                        id="image-url"
+                        name="imageUrl"
+                        placeholder="Enter the URL of the image"
+                        value={formData1.imageUrl}
+                        onChange={handleChange1}
+                        className="col-span-3"
+                      />
                     </div>
                     <DialogClose asChild>
                       <Button type="submit" onSubmit={handleProject}>Post</Button>
@@ -432,6 +461,19 @@ function page() {
                         className="col-span-3"
                       />
                     </div>
+                    <div className="grid items-center grid-cols-4 gap-4">
+                      <Label htmlFor="image-url" className="text-right w-fit">
+                        Image URL
+                      </Label>
+                      <Input
+                        id="image-url"
+                        name="imageUrl"
+                        placeholder="Enter the URL of the image"
+                        value={formData.imageUrl}
+                        onChange={handleChange}
+                        className="col-span-3"
+                      />
+                    </div>
                     <DialogClose asChild>
                       <Button type="submit" onSubmit={handleJob}>Post</Button>
                     </DialogClose>
@@ -459,7 +501,11 @@ function page() {
                 </div>
               </div>
               <div className="flex flex-col gap-4">
-                <h1>{data.content}</h1>
+                {
+                  data.type === 1 && (
+                    <h1>{data.content}</h1>
+                  )
+                }
                 {data.type === 3 && (
                   <div className="flex flex-col gap-2">
                     <h1>Job Title: <span className="font-medium">{data.company}</span></h1>
@@ -469,8 +515,16 @@ function page() {
                     <h1>Job Location: <span className="font-medium">{data.location}</span></h1>
                   </div>
                 )}
-                {data.image && (
-                  <img src={data.image} className="object-cover rounded-md" />
+                {data.type === 2 && (
+                  <div className="flex flex-col gap-2">
+                    <h1>Project Title: <span className="font-medium">{data.title}</span></h1>
+                    <h1>Project Content: <span className="font-medium">{data.content}</span></h1>
+                    <h1>Project TechStack: <span className="font-medium">{data.techStack}</span></h1>
+                    <h1>Project Submission Date: <span className="font-medium">{data.submissionDate}</span></h1>
+                  </div>
+                )}
+                {data.imageUrl && (
+                  <img src={data.imageUrl} className="object-cover rounded-md" />
                 )}
                 <Separator className="w-full bg-neutral-300" />
                 <div className="flex items-center justify-between">

@@ -10,7 +10,7 @@ export async function POST(req, res) {
         return NextResponse.json({ error: "User is not authenticated" }, { status: 401 });
     }
 
-    const { title, content, submissionDate, techStack } = await req.json();
+    const { title, content, submissionDate, techStack, imageUrl } = await req.json();
 
     // Create a new post with a projectPost relation
     const post = await prisma.projectPost.create({
@@ -19,7 +19,8 @@ export async function POST(req, res) {
             title: title,
             content: content,
             submissionDate: submissionDate,
-            techStack: techStack
+            techStack: techStack,
+            imageUrl: imageUrl
         },
     });
 

@@ -10,18 +10,19 @@ export async function POST(req, res) {
         return NextResponse.json({ error: "User is not authenticated" }, { status: 401 });
     }
 
-    const { company, title, content, joiningDate, salary, location, role } = await req.json();
+    const { company, title, content, joiningDate, salary, location, role, imageUrl } = await req.json();
 
     try {
         const post = await prisma.jobPost.create({
             data: {
-                userId: session.data.id, 
+                userId: session.data.id,
                 company: company,
                 title: title,
                 content: content,
                 joiningDate: joiningDate,
                 salary: salary,
                 location: location,
+                imageUrl: imageUrl,
                 role: role,
             },
         });

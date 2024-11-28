@@ -10,13 +10,14 @@ export async function POST(req, res) {
         return NextResponse.json({ error: "User is not authenticated" }, { status: 401 });
     }
 
-    const {  title, content } = await req.json();
+    const { title, content, imageUrl } = await req.json();
 
     // Create a new post with normalPost relation
     const post = await prisma.normalPost.create({
         data: {
             userId: session.data.id, // Associate the post with the existing user
             title: title,
+            imageUrl: imageUrl,
             content: content,
         },
     });

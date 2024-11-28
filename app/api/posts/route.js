@@ -11,6 +11,7 @@ export async function GET(req) {
         select: {
           id: true,
           title: true,
+          imageUrl: true,
           content: true,
           likes: true,
           createdAt: true,
@@ -25,6 +26,7 @@ export async function GET(req) {
           title: true,
           content: true,
           submissionDate: true,
+          imageUrl: true,
           techStack: true,
           likes: true,
           createdAt: true,
@@ -38,6 +40,7 @@ export async function GET(req) {
           id: true,
           company: true,
           joiningDate: true,
+          imageUrl: true,
           role: true,
           salary: true,
           location: true,

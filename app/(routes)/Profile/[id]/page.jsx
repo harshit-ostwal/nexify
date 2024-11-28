@@ -196,8 +196,8 @@ function page() {
                             <h1 className="text-4xl font-bold text-white">{userProfile?.fullname}</h1>
                             <div className="flex gap-2">
                                 <div className="flex gap-2">
-                                    {topskills.map((data) => (
-                                        <span key={data} className="px-2 py-1 border rounded-md text-amber-500 border-amber-500">{data}</span>
+                                    {topskills.map((data, index) => (
+                                        <span key={index} className="px-2 py-1 border rounded-md text-amber-500 border-amber-500">{data}</span>
                                     ))}
                                 </div>
                             </div>
