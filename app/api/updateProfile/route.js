@@ -10,7 +10,7 @@ export async function POST(req, res) {
         return NextResponse.json({ error: "User is not authenticated" }, { status: 401 });
     }
 
-    const { fullname, mobileno, email, shortBio, about } = await req.json();
+    const { fullname, mobileno, email, shortBio, about, topSkill1, topSkill2, topSkill3 } = await req.json();
 
     const user = await prisma.user.update({
         where: {
@@ -21,7 +21,8 @@ export async function POST(req, res) {
             , mobileno
             , email
             , shortBio
-            , about
+            , about,
+            topSkills: [topSkill1, topSkill2, topSkill3]
         }
     })
 

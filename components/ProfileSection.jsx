@@ -14,6 +14,9 @@ const ProfileSection = ({ posts }) => {
     avatar: "",
     shortBio: "",
     about: "",
+    topSkill1: "",
+    topSkill2: "",
+    topSkill3: "",
   });
 
   // Sync posts with profile when posts are updated
@@ -27,6 +30,9 @@ const ProfileSection = ({ posts }) => {
         avatar: posts.avatar || "",
         shortBio: posts.shortBio || "",
         about: posts.about || "",
+        topSkill1: profile.topSkill || "",
+        topSkill2: profile.topSkill2 || "",
+        topSkill3: profile.topSkill3 || "",
       });
     }
   }, [posts]);
@@ -42,6 +48,9 @@ const ProfileSection = ({ posts }) => {
         email: profile.email,
         shortBio: profile.shortBio,
         about: profile.about,
+        topSkill1: profile.topSkill1,
+        topSkill2: profile.topSkill2,
+        topSkill3: profile.topSkill3,
       });
 
       if (response.status === 200) {
@@ -170,6 +179,48 @@ const ProfileSection = ({ posts }) => {
                 setProfile({ ...profile, about: e.target.value })
               }
               rows={4}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+
+          <div className="md:col-span-2">
+            <label className="block mb-2 text-sm font-medium text-gray-700">
+              Top 1 Skills
+            </label>
+            <input
+              type="text"
+              value={profile.topSkill1}
+              onChange={(e) =>
+                setProfile({ ...profile, topSkill1: e.target.value })
+              }
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+
+          <div className="md:col-span-2">
+            <label className="block mb-2 text-sm font-medium text-gray-700">
+              Top 2 Skills
+            </label>
+            <input
+              type="text"
+              value={profile.topSkill2}
+              onChange={(e) =>
+                setProfile({ ...profile, topSkill2: e.target.value })
+              }
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+
+          <div className="md:col-span-2">
+            <label className="block mb-2 text-sm font-medium text-gray-700">
+              Top 3 Skills
+            </label>
+            <input
+              type="text"
+              value={profile.topSkill3}
+              onChange={(e) =>
+                setProfile({ ...profile, topSkill3: e.target.value })
+              }
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>

@@ -24,7 +24,7 @@ function SignIn() {
         password,
       });
 
-      if (res && res.ok) {
+      if (res) {
         toast.success("Sign In Successful!");
         router.push('/Dashboard');
       } else if (res && res.error) {
