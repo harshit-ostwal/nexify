@@ -32,12 +32,8 @@ export async function POST(req) {
             },
         });
 
-        console.log(updatedPost);
-
-
         return NextResponse.json(updatedPost);
     } catch (error) {
-        console.error("Error liking the post:", error);  // Log error
         return NextResponse.json({ error: 'Error liking the post' }, { status: 500 });
     }
 }

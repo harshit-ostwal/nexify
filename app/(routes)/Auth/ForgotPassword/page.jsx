@@ -17,14 +17,20 @@ function Page() {
     e.preventDefault();
     setLoading(true);
 
+    if (!email.match(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
+      toast.error("Please enter a valid email address.");
+      setLoading(false);
+      return;
+    }
+
     try {
-      const response = await axios.post("/api/auth/sendResetPasswordEmail", {
+      const response = await axios.post("/api/sendMail", {
         email,
       });
 
       if (response.status === 200) {
         toast.success("OTP sent to your email!");
-        router.push("/Auth/OTPVerify");
+        router.push(`/Auth/OTPVerify/${email}`);
       } else {
         toast.error(response.data.error || "Failed to send OTP.");
       }
@@ -35,6 +41,7 @@ function Page() {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-screen gap-10">
@@ -54,10 +61,11 @@ function Page() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
+              aria-label="Email Address"
               required
             />
           </div>
-          <Button onClick={handleClick} disabled={loading}>
+          <Button onClick={handleClick} disabled={loading} aria-label="Send OTP">
             {loading ? "Sending OTP..." : "Reset Password"}
           </Button>
         </form>

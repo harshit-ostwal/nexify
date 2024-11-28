@@ -6,53 +6,53 @@ import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } fro
 import axios from 'axios'
 import { useParams } from 'next/navigation'
 
-const SkillsData = [
-    {
-        subject: 'Frontend Developer',
-        fullMark: 100,
-        A: 100,
-    },
-    {
-        subject: 'Backend Developer',
-        fullMark: 100,
-        A: 10,
-    },
-    {
-        subject: 'MERN',
-        fullMark: 100,
-        A: 30,
-    },
-    {
-        subject: 'Communication',
-        fullMark: 100,
-        A: 20,
-    },
-    {
-        subject: 'Debator',
-        fullMark: 100,
-        A: 70,
-    },
-    {
-        subject: 'Dancing',
-        fullMark: 100,
-        A: 95,
-    },
-    {
-        subject: 'Writing',
-        fullMark: 100,
-        A: 100,
-    },
-    {
-        subject: 'Dancing',
-        fullMark: 100,
-        A: 95,
-    },
-    {
-        subject: 'Writing',
-        fullMark: 100,
-        A: 100,
-    },
-];
+// const SkillsData = [
+//     {
+//         subject: 'Frontend Developer',
+//         fullMark: 100,
+//         A: 100,
+//     },
+//     {
+//         subject: 'Backend Developer',
+//         fullMark: 100,
+//         A: 10,
+//     },
+//     {
+//         subject: 'MERN',
+//         fullMark: 100,
+//         A: 30,
+//     },
+//     {
+//         subject: 'Communication',
+//         fullMark: 100,
+//         A: 20,
+//     },
+//     {
+//         subject: 'Debator',
+//         fullMark: 100,
+//         A: 70,
+//     },
+//     {
+//         subject: 'Dancing',
+//         fullMark: 100,
+//         A: 95,
+//     },
+//     {
+//         subject: 'Writing',
+//         fullMark: 100,
+//         A: 100,
+//     },
+//     {
+//         subject: 'Dancing',
+//         fullMark: 100,
+//         A: 95,
+//     },
+//     {
+//         subject: 'Writing',
+//         fullMark: 100,
+//         A: 100,
+//     },
+// ];
 
 const ProjectsData = [
     {
@@ -178,10 +178,7 @@ function page() {
 
     console.log(skills);
 
-
-
     const [seeMore, setSeeMore] = useState(false);
-
 
     const handleSeeMore = () => {
         setSeeMore(!seeMore);
@@ -233,14 +230,14 @@ function page() {
                 <div className="flex flex-col gap-10">
                     <h1 className="w-full text-2xl font-medium text-start">Skills</h1>
                     <div className="flex gap-2">
-                        {/* {.map((data, index) => (
+                        {skills.map((data, index) => (
                             <h1 key={index} className="bg-[#14213D] text-white text-nowrap px-3 py-2 rounded-full w-fit">{data.subject}</h1>
-                        ))} */}
+                        ))}
                     </div>
                 </div>
                 <div className="w-full h-[30vw]">
                     <ResponsiveContainer width="100%" height="100%">
-                        <RadarChart cx="50%" cy="50%" outerRadius="80%" data={SkillsData}>
+                        <RadarChart cx="50%" cy="50%" outerRadius="80%" data={skills}>
                             <PolarGrid stroke="#999" />
                             <PolarAngleAxis dataKey="subject" />
                             <Radar name="Mike" dataKey="A" stroke="#14213D" fill="#14213D" fillOpacity={0.3} />

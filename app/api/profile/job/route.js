@@ -15,11 +15,11 @@ export async function POST(req, res) {
     try {
         const post = await prisma.jobPost.create({
             data: {
-                userId: session.data.id, // Use the user ID from the session
+                userId: session.data.id, 
                 company: company,
                 title: title,
                 content: content,
-                joiningDate: joiningDate, // Convert string date to Date object
+                joiningDate: joiningDate,
                 salary: salary,
                 location: location,
                 role: role,

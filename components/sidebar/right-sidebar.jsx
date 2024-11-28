@@ -3,6 +3,8 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { ScrollArea } from "../ui/scroll-area";
 import { toast } from "sonner";
+import Link from "next/link";
+import { Button } from "../ui/button";
 
 function RightSidebar() {
   const [users, setUsers] = useState([]);
@@ -12,7 +14,7 @@ function RightSidebar() {
       const response = await axios.get("/api/users");
       setUsers(response.data.user);
     } catch (error) {
-      toast.error("Error fetching users")
+      toast.error("Error fetching users" + error)
     }
   };
 
@@ -21,7 +23,7 @@ function RightSidebar() {
   }, []);
 
   return (
-    <div className="fixed right-0 top-auto hidden min-h-screen overflow-y-auto border-l xl:flex w-80">
+    <div className="fixed right-0 top-auto hidden min-h-screen overflow-y-auto border-l shadow-xl xl:flex w-80">
       <div className="flex flex-col w-full gap-5 p-5">
         {/* Sidebar Header */}
         <h2 className="text-lg font-bold text-gray-700">Suggested Connections</h2>
@@ -30,16 +32,17 @@ function RightSidebar() {
         </p>
 
         {/* Users List */}
-        <ScrollArea className="w-full h-[900px]">
+        <ScrollArea className="w-full h-[980px]">
 
           {users.map((data, index) => (
-            <div
+            <Link
+              href={`/Profile/${data.id}`}
               className="flex flex-col items-center justify-between w-full gap-4 p-4 mt-5 bg-white border rounded-md shadow-sm border-neutral-300"
               key={index}
             >
               <div className="flex flex-col items-center justify-center w-full gap-4" >
                 <img
-                  className="w-20 h-20 rounded-full"
+                  className="object-cover w-20 h-20 rounded-full"
                   src={data.avatar}
                   alt={data.fullname}
                 />
@@ -57,10 +60,10 @@ function RightSidebar() {
                   </div>
                 </div>
               </div>
-              <button className="w-full px-4 py-2 text-sm font-medium text-white rounded-md bg-amber-500 hover:bg-amber-600">
+              <Button className="w-full px-4 py-2 text-sm font-medium">
                 Follow
-              </button>
-            </div>
+              </Button>
+            </Link>
           ))}
         </ScrollArea>
 

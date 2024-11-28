@@ -1,13 +1,9 @@
 "use client"
-
 import React, { useState } from 'react';
 import { Plus, Trash2, Edit2 } from 'lucide-react';
 
-
 const SkillsSection = ({ posts }) => {
-
   console.log(posts);
-  
   const [skills, setSkills] = useState([
     {
       id: '1',
@@ -23,7 +19,13 @@ const SkillsSection = ({ posts }) => {
     }
   ]);
 
-  const [editingSkill, setEditingSkill] = useState(null);
+  const [editingSkill, setEditingSkill] = useState({
+    id: '',
+    subject: '',
+    fullMark: 0,
+    A: 0
+  });
+  
   const [isAddingSkill, setIsAddingSkill] = useState(false);
 
   const handleAddSkill = () => {

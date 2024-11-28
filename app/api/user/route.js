@@ -38,7 +38,7 @@ export async function GET(req) {
     const user = await prisma.user.findUnique({
         where: {
             id: userId,
-        },
+        }
     });
 
     return NextResponse.json({ user, data: totalPosts })

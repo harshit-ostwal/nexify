@@ -50,18 +50,18 @@ function SignIn() {
           <div className="flex flex-col gap-3">
             <Label>Roll No <span className="text-red-500">*</span></Label>
             <Input
+              required={true}
               value={rollno}
               onChange={(e) => setRollNo(e.target.value)}
-              required
             />
           </div>
           <div className="flex flex-col gap-3">
             <Label>Password <span className="text-red-500">*</span></Label>
             <Input
               type="password"
+              required={true}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
             />
             <Link href="/Auth/ForgotPassword" className="text-blue-500">
               Forgot Password?

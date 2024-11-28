@@ -1,3 +1,4 @@
+"use client"
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import {
@@ -7,13 +8,22 @@ import {
     InputOTPSlot,
 } from "@/components/ui/input-otp"
 import React from 'react'
+import { usePathname, useRouter } from 'next/navigation'
 
 function page() {
 
+    const router = useRouter();
+    const pathname = usePathname();
+    console.log(pathname);
+    
+    const handleSubmit = () => {
+        router.push(`/Auth/Next`);
+    }
+
     return (
-        <div className="flex flex-col gap-10 items-center justify-center w-full h-screen">
-            <div className="flex flex-col gap-10 items-center justify-center w-1/4">
-                <div className="flex flex-col gap-2 items-start w-full">
+        <div className="flex flex-col items-center justify-center w-full h-screen gap-10">
+            <div className="flex flex-col items-center justify-center w-1/4 gap-10">
+                <div className="flex flex-col items-start w-full gap-2">
                     <h1 className="text-6xl font-black">OTP Verification</h1>
                     <p>Please Enter The OTP Sent To Your Email To Verify Your Identity.</p>
                 </div>
@@ -32,9 +42,9 @@ function page() {
                             <InputOTPSlot index={5} />
                         </InputOTPGroup>
                     </InputOTP>
-                    <Button>Verify OTP</Button>
+                    <Button onClick={() => handleSubmit()}>Verify OTP</Button>
                 </form>
-                <div className="flex gap-4 items-center justify-center">
+                <div className="flex items-center justify-center gap-4">
                     <div className="w-40 border-b border-neutral-400"></div>
                     <p className="text-neutral-400">OR</p>
                     <div className="w-40 border-b border-neutral-400"></div>

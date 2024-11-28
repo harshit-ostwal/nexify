@@ -13,7 +13,6 @@ function page() {
     const fetchUserProfile = async () => {
         const response = await axios.get(`/api/updateProfile`);
         setPosts(response.data.user);
-
     };
 
     useEffect(() => {

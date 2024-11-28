@@ -14,9 +14,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Heart, MessageSquare, Share2, Image as ImageIcon, NotebookTabs, ThumbsUp, File, Paperclip } from 'lucide-react'
+import { Heart, MessageSquare, Share2, ThumbsUp, File, Paperclip } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import { toast } from 'sonner'
 
 function page() {
 
@@ -24,13 +25,39 @@ function page() {
 
   const fetchUserProfile = async () => {
     const response = await axios.get(`/api/posts`);
-    setPosts(response.data.formattedPosts);
-
+    const formattedPosts = response.data.formattedPosts.map((post) => ({
+      ...post,
+      liked: post.likes || false,
+      applied: post.applied || false,
+    }));
+    setPosts(formattedPosts);
   };
 
   useEffect(() => {
     fetchUserProfile();
   }, []);
+
+  const handleApply = async (postId) => {
+    try {
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post.id === postId ? { ...post, applied: !post.applied } : post
+        )
+      );
+
+      await axios.post(`/api/jobApply`, { postId });
+
+      toast.success("Job Applied Successfully!");
+      fetchUserProfile();
+
+    } catch (error) {
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post.id === postId ? { ...post, applied: !post.applied } : post
+        )
+      );
+    }
+  };
 
   const [formData, setFormData] = useState({
     title: "",
@@ -80,9 +107,17 @@ function page() {
 
   const handleLike = async (postId, postType) => {
     try {
-      const res = await axios.post(`/api/posts/like`, { postId, postType });
-      fetchUserProfile(); // Re-fetch posts to update like count
-      console.log(res);
+      // Optimistically update the UI
+      setLikedPosts((prev) => ({
+        ...prev,
+        [postId]: !prev[postId],
+      }));
+
+      // Call the API
+      await axios.post(`/api/posts/like`, { postId, postType });
+
+      // Re-fetch posts to update the like count
+      fetchUserProfile();
     } catch (error) {
       console.error("Error liking post:", error);
     }
@@ -113,6 +148,8 @@ function page() {
     }
   }
 
+  const [likedPosts, setLikedPosts] = useState({});
+
   const handleProject = async (e) => {
     e.preventDefault();
 
@@ -135,18 +172,16 @@ function page() {
     }
   };
 
-
   return (
     <div className="flex">
       <LeftSidebar />
-
       <div className="flex flex-col items-center justify-center flex-1 w-full h-full max-w-2xl gap-10 mx-auto my-20">
         <div className="flex flex-col w-full h-full p-5 border rounded-md">
           <div className="flex flex-col items-center justify-between w-full gap-4">
             <div className="flex items-center justify-center w-full gap-4">
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button variant="ghost" className="w-full border hover:border-black">
+                  <Button className="w-full border hover:border-black">
                     Start a Post
                   </Button>
                 </DialogTrigger>
@@ -195,7 +230,7 @@ function page() {
               </Dialog>
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button variant="ghost" className="w-full border hover:border-black">
+                  <Button className="w-full border hover:border-black">
                     Post a Project
                   </Button>
                 </DialogTrigger>
@@ -206,7 +241,7 @@ function page() {
                       Share your project details. Click post when you're ready.
                     </DialogDescription>
                   </DialogHeader>
-                  <form onSubmit={handleProject} className="grid gap-4 py-4">                    {/* Title Field */}
+                  <form onSubmit={handleProject} className="grid gap-4 py-4">
                     <div className="grid items-center grid-cols-4 gap-4">
                       <Label htmlFor="post-title" className="text-right w-fit">
                         Title
@@ -215,8 +250,8 @@ function page() {
                         id="job-title"
                         placeholder="Enter the project title"
                         name="title"
-                        value={formData1.title} // Bind the value to formData
-                        onChange={handleChange1} // Ensure handleChange updates the formData
+                        value={formData1.title}
+                        onChange={handleChange1}
                         className="col-span-3"
                       />
                     </div>
@@ -228,8 +263,8 @@ function page() {
                         id="tech-stack"
                         placeholder="Enter the project TechStack"
                         name="techStack"
-                        value={formData1.techStack} // Bind the value to formData
-                        onChange={handleChange1} // Ensure handleChange updates the formData
+                        value={formData1.techStack}
+                        onChange={handleChange1}
                         className="col-span-3"
                       />
                     </div>
@@ -269,7 +304,7 @@ function page() {
               </Dialog>
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button variant="ghost" className="w-full border hover:border-black">
+                  <Button className="w-full border hover:border-black">
                     Post a Job
                   </Button>
                 </DialogTrigger>
@@ -280,8 +315,7 @@ function page() {
                       Share job details. Click post when you're ready.
                     </DialogDescription>
                   </DialogHeader>
-                  <form onSubmit={handleJob} className="grid gap-4 py-4">                    {/* Job Title Field */}
-                    {/* Company Field */}
+                  <form onSubmit={handleJob} className="grid gap-4 py-4">
                     <div className="grid items-center grid-cols-4 gap-4">
                       <Label htmlFor="job-title" className="text-right w-fit">
                         Title
@@ -290,8 +324,8 @@ function page() {
                         id="job-title"
                         placeholder="Enter the job title"
                         name="title"
-                        value={formData.title} // Bind the value to formData
-                        onChange={handleChange} // Ensure handleChange updates the formData
+                        value={formData.title}
+                        onChange={handleChange}
                         className="col-span-3"
                       />
                     </div>
@@ -395,7 +429,7 @@ function page() {
             <div key={index} className="flex flex-col justify-between w-full gap-4 p-5 border-b">
               <div className="flex items-center gap-4">
                 <img
-                  className="w-16 h-16 rounded-full"
+                  className="object-cover w-16 h-16 rounded-full"
                   src={data.author.avatar}
                   alt={data.author.name}
                 />
@@ -416,27 +450,27 @@ function page() {
                   </div>
                 )}
                 {data.image && (
-                  <img src={data.image} className="rounded-md" />
+                  <img src={data.image} className="object-cover rounded-md" />
                 )}
                 <Separator className="w-full bg-neutral-300" />
                 <div className="flex items-center justify-between">
                   {data.type === 1 && (
                     <>
                       <button
-                        className="flex items-center gap-2 text-neutral-400"
+                        className="flex items-center gap-2"
                         onClick={() => handleLike(data.id, "NormalPost")}
                       >
-                        <Heart className="w-5 h-5" />
+                        <Heart color={likedPosts[data.id] ? "none" : "#14213D"} fill={likedPosts[data.id] ? "red" : "none"} className={`w-5 h-5 `} />
                         <p className="text-sm">{data.likes}</p>
                       </button>
                       <button
-                        className="flex items-center gap-2 text-neutral-400"
+                        className="flex items-center gap-2 text-[#14213D]"
                         onClick={() => handleComment(data.id, "NormalPost")}
                       >
                         <MessageSquare className="w-5 h-5" />
                         <p className="text-sm">{data.comments}</p>
                       </button>
-                      <button className="flex items-center gap-2 text-neutral-400">
+                      <button className="flex items-center gap-2 text-[#14213D]">
                         <Share2 className="w-5 h-5" />
                         <p className="text-sm">Share</p>
                       </button>
@@ -445,24 +479,27 @@ function page() {
                   {data.type === 3 && (
                     <>
                       <button
-                        className="flex items-center gap-2 text-neutral-400"
+                        className="flex items-center gap-2"
                         onClick={() => handleLike(data.id, "JobPost")}
                       >
-                        <ThumbsUp className="w-5 h-5" />
+                        <Heart color={likedPosts[data.id] ? "none" : "#14213D"} fill={likedPosts[data.id] ? "red" : "none"} className={`w-5 h-5 `} />
                         <p className="text-sm">{data.likes}</p>
                       </button>
                       <button
-                        className="flex items-center gap-2 text-neutral-400"
+                        className="flex items-center gap-2 text-[#14213D]"
                         onClick={() => handleComment(data.id, "JobPost")}
                       >
                         <MessageSquare className="w-5 h-5" />
                         <p className="text-sm">{data.comments}</p>
                       </button>
-                      <button className="flex items-center gap-2 text-neutral-400">
-                        <File className="w-5 h-5" />
-                        <p className="text-sm">Apply</p>
+                      <button
+                        className="flex items-center gap-2"
+                        onClick={() => handleApply(data.id)} // Trigger handleApply
+                      >
+                        <File className={`w-5 h-5 ${data.applied ? "text-green-500" : "text-[#14213D]"}`} />
+                        <p className="text-sm">{data.applied ? 'Applied' : 'Apply'}</p> {/* Toggle text based on applied state */}
                       </button>
-                      <button className="flex items-center gap-2 text-neutral-400">
+                      <button className="flex items-center gap-2 text-[#14213D]">
                         <Share2 className="w-5 h-5" />
                         <p className="text-sm">Share</p>
                       </button>
@@ -471,24 +508,24 @@ function page() {
                   {data.type === 2 && (
                     <>
                       <button
-                        className="flex items-center gap-2 text-neutral-400"
+                        className="flex items-center gap-2"
                         onClick={() => handleLike(data.id, "ProjectPost")}
                       >
-                        <Heart className="w-5 h-5" />
+                        <Heart color={likedPosts[data.id] ? "none" : "#14213D"} fill={likedPosts[data.id] ? "red" : "none"} className={`w-5 h-5 `} />
                         <p className="text-sm">{data.likes}</p>
                       </button>
                       <button
-                        className="flex items-center gap-2 text-neutral-400"
+                        className="flex items-center gap-2 text-[#14213D]"
                         onClick={() => handleComment(data.id, "ProjectPost")}
                       >
                         <MessageSquare className="w-5 h-5" />
                         <p className="text-sm">{data.comments}</p>
                       </button>
-                      <button className="flex items-center gap-2 text-neutral-400">
+                      <button className="flex items-center gap-2 text-[#14213D]">
                         <Paperclip className="w-5 h-5" />
                         <p className="text-sm">Collab</p>
                       </button>
-                      <button className="flex items-center gap-2 text-neutral-400">
+                      <button className="flex items-center gap-2 text-[#14213D]">
                         <Share2 className="w-5 h-5" />
                         <p className="text-sm">Share</p>
                       </button>

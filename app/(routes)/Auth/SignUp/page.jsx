@@ -72,6 +72,7 @@ function SignUp() {
           <div className="flex flex-col gap-3">
             <Label>Full Name <span className="text-red-500">*</span></Label>
             <Input
+              required={true}
               name="fullname"
               value={formData.fullname}
               onChange={handleInputChange}
@@ -80,6 +81,7 @@ function SignUp() {
           <div className="flex flex-col gap-3">
             <Label>Roll No <span className="text-red-500">*</span></Label>
             <Input
+              required={true}
               name="rollno"
               value={formData.rollno}
               onChange={handleInputChange}
@@ -88,6 +90,7 @@ function SignUp() {
           <div className="flex flex-col gap-3">
             <Label>Mobile No <span className="text-red-500">*</span></Label>
             <Input
+              required={true}
               name="mobileNo"
               value={formData.mobileNo}
               onChange={handleInputChange}
@@ -97,6 +100,7 @@ function SignUp() {
             <Label>Email <span className="text-red-500">*</span></Label>
             <Input
               name="email"
+              required={true}
               value={formData.email}
               onChange={handleInputChange}
             />
@@ -104,6 +108,7 @@ function SignUp() {
           <div className="flex flex-col gap-3">
             <Label>Password <span className="text-red-500">*</span></Label>
             <Input
+              required={true}
               type="password"
               name="password"
               value={formData.password}
@@ -113,6 +118,7 @@ function SignUp() {
           <div className="flex flex-col gap-3">
             <Label>Confirm Password <span className="text-red-500">*</span></Label>
             <Input
+              required={true}
               type="password"
               name="confirmPassword"
               value={formData.confirmPassword}

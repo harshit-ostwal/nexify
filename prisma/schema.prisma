@@ -8,26 +8,69 @@ datasource db {
 }
 
 model User {
-  id          String        @id @default(auto()) @map("_id") @db.ObjectId
-  fullname    String
-  rollno      String        @unique // Used for login
-  mobileNo    String        @unique
-  email       String        @unique
-  password    String // Hashed password
-  avatar      String?       @default("https://images.unsplash.com/photo-1575995872537-3793d29d972c") // Profile image URL
-  topSkills   String[] // Array of top 3 skills
-  shortBio    String?
-  about       String?
-  skills      Skills[] // Array of all skills
-  following   Follow[]      @relation("UserFollowing")
-  followers   Follow[]      @relation("UserFollowers")
-  projects    Project[]
-  experiences Experience[]
-  normalPost  NormalPost[]
-  jobPost     JobPost[]
-  projPost    ProjectPost[]
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id              String            @id @default(auto()) @map("_id") @db.ObjectId
+  fullname        String
+  rollno          String            @unique // Used for login
+  mobileNo        String            @unique
+  email           String            @unique
+  password        String // Hashed password
+  avatar          String?           @default("https://images.unsplash.com/photo-1575995872537-3793d29d972c") // Profile image URL
+  topSkills       String[] // Array of top 3 skills
+  shortBio        String?
+  about           String?
+  skills          Skills[] // Array of all skills
+  following       Follow[]          @relation("UserFollowing")
+  followers       Follow[]          @relation("UserFollowers")
+  projects        Project[]
+  experiences     Experience[]
+  normalPost      NormalPost[]
+  jobPost         JobPost[]
+  jobApplications JobApplications[]
+  projPost        ProjectPost[]
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+}
+
+model Chat {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  user1Id     String   @db.ObjectId
+  user2Id     String   @db.ObjectId
+  messages    Message[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user1       User     @relation(fields: [user1Id], references: [id])
+  user2       User     @relation(fields: [user2Id], references: [id])
+}
+
+model Message {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  chatId    String   @db.ObjectId
+  senderId  String   @db.ObjectId
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  chat      Chat     @relation(fields: [chatId], references: [id])
+  sender    User     @relation(fields: [senderId], references: [id])
+}
+
+
+model JobApplications {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  status    String   @default("Applied")
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    String?  @db.ObjectId
+  JobPost   JobPost? @relation(fields: [jobPostId], references: [id])
+  jobPostId String?  @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OTP {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  otp       String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
 }
 
 model NormalPost {
@@ -60,22 +103,23 @@ model ProjectPost {
 }
 
 model JobPost {
-  id          String     @id @default(auto()) @map("_id") @db.ObjectId
-  company     String
-  joiningDate String
-  content     String
-  salary      String
-  title       String
-  location    String
-  role        String
-  likes       Int        @default(0)
-  shares      Int        @default(0)
-  applies     String[]
-  comments    JComment[]
-  User        User?      @relation(fields: [userId], references: [id])
-  userId      String?    @db.ObjectId
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id              String            @id @default(auto()) @map("_id") @db.ObjectId
+  company         String
+  joiningDate     String
+  content         String
+  salary          String
+  title           String
+  location        String
+  role            String
+  likes           Int               @default(0)
+  shares          Int               @default(0)
+  applies         String[]
+  comments        JComment[]
+  jobApplications JobApplications[]
+  User            User?             @relation(fields: [userId], references: [id])
+  userId          String?           @db.ObjectId
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
 }
 
 model JComment {
@@ -130,9 +174,9 @@ model Project {
   id          String             @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   description String
-  techstack   ProjectTechStack[] // Technologies used in the project
-  github      String? // GitHub link
-  link        String? // Live project link
+  techstack   ProjectTechStack[]
+  github      String?
+  link        String?
   userId      String             @db.ObjectId
   user        User               @relation(fields: [userId], references: [id])
   createdAt   DateTime           @default(now())
@@ -162,8 +206,8 @@ model Experience {
   companyName String
   position    String
   description String
-  techstack   ExperienceTechStack[] // Tools/Technologies used
-  link        String? // Link to company or work
+  techstack   ExperienceTechStack[]
+  link        String?
   userId      String                @db.ObjectId
   user        User                  @relation(fields: [userId], references: [id])
   createdAt   DateTime              @default(now())
