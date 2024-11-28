@@ -24,9 +24,9 @@ function SignIn() {
         password,
       });
 
+      router.push('/Dashboard');
       if (res) {
         toast.success("Sign In Successful!");
-        router.push('/Dashboard');
       } else if (res && res.error) {
         const errorMessage = JSON.parse(res.error)?.message || "Invalid credentials.";
         toast.error(errorMessage);
