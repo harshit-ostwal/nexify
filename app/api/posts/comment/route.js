@@ -10,7 +10,7 @@ export async function POST(req) {
         return NextResponse.json({ error: "User is not authenticated" }, { status: 401 });
     }
 
-    const { postId, postType, message } = await req.json(); // Expect postType and comment message
+    const { postId, postType, message } = await req.json();
 
     if (!postType || !['NormalPost', 'ProjectPost', 'JobPost'].includes(postType)) {
         return NextResponse.json({ error: "Invalid post type" }, { status: 400 });
@@ -20,27 +20,30 @@ export async function POST(req) {
         return NextResponse.json({ error: "Comment message is required" }, { status: 400 });
     }
 
-    try {
-        // Create a comment dynamically based on the postType
-        const newComment = await prisma[`${postType}Comment`].create({
+    let newComment;
+
+    if (postType === 'NormalPost') {
+        newComment = await prisma.nComment.create({
             data: {
                 message: message,
-                [`${postType.toLowerCase()}Id`]: postId, // Dynamically refer to the correct post model
+                normalPostId: postId, // Adjusted for NormalPost
             },
         });
-
-        // Update the comment count for the respective post type
-        await prisma[postType].update({
-            where: { id: postId },
+    } else if (postType === 'ProjectPost') {
+        newComment = await prisma.pComment.create({
             data: {
-                comments: {
-                    increment: 1, // Increment the comment count
-                },
+                message: message,
+                projectPostId: postId, // Adjusted for ProjectPost
             },
         });
-
-        return NextResponse.json(newComment);
-    } catch (error) {
-        return NextResponse.json({ error: 'Error posting the comment' }, { status: 500 });
+    } else if (postType === 'JobPost') {
+        newComment = await prisma.jComment.create({
+            data: {
+                message: message,
+                jobPostId: postId, // Adjusted for JobPost
+            },
+        });
     }
+
+    return NextResponse.json(newComment);
 }

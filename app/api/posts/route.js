@@ -15,7 +15,7 @@ export async function GET(req) {
           likes: true,
           createdAt: true,
           comments: {
-            select: { id: true, message: true }
+            select: { id: true, message: true, createdAt: true },
           },
         }
       },
@@ -29,7 +29,7 @@ export async function GET(req) {
           likes: true,
           createdAt: true,
           comments: {
-            select: { id: true, message: true }
+            select: { id: true, message: true, createdAt: true },
           },
         }
       },
@@ -46,7 +46,7 @@ export async function GET(req) {
           likes: true,
           createdAt: true,
           comments: {
-            select: { id: true, message: true }
+            select: { id: true, message: true, createdAt: true },
           },
         }
       }
@@ -63,7 +63,7 @@ export async function GET(req) {
           name: user.fullname,
           title: user.shortBio,
         },
-        comments: post.comments.length,
+        comments: post.comments,
         image: "", // Add image field if needed
       })),
       ...user.projPost.map((post) => ({
@@ -74,7 +74,7 @@ export async function GET(req) {
           name: user.fullname,
           title: user.shortBio,
         },
-        comments: post.comments.length,
+        comments: post.comments,
         image: "https://images.unsplash.com/photo-1731432248686-af238c870acc?q=80&w=4140&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Sample image for project post
       })),
       ...user.jobPost.map((post) => ({
@@ -85,7 +85,7 @@ export async function GET(req) {
           name: user.fullname,
           title: user.shortBio,
         },
-        comments: post.comments.length,
+        comments: post.comments,
         image: "", // Add image field if needed
       }))
     ];

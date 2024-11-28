@@ -66,6 +66,31 @@ function page() {
     }
   };
 
+  const [commentData, setCommentData] = useState({ postId: '', postType: '', message: '' });
+
+  const handleComment = (postId, postType) => {
+    setCommentData({ postId, postType, message: '' });
+  };
+
+  const handleCommentSubmit = async (e) => {
+    e.preventDefault();
+
+    const { postId, postType, message } = commentData;
+
+    if (!message.trim()) {
+      toast.error("Comment message is required");
+      return;
+    }
+
+    try {
+      await axios.post(`/api/posts/comment`, { postId, postType, message });
+      fetchUserProfile();
+      toast.success("Comment posted successfully!");
+    } catch (error) {
+      toast.error("Something went wrong. Please try again later.");
+    }
+  };
+
   const [formData, setFormData] = useState({
     title: "",
     company: "",
@@ -127,18 +152,6 @@ function page() {
       fetchUserProfile();
     } catch (error) {
       console.error("Error liking post:", error);
-    }
-  };
-
-  // Handle comment action
-  const handleComment = async (postId, postType) => {
-    try {
-      const res = await axios.post(`/api/posts/comment`, { postId, postType });
-      fetchUserProfile(); // Re-fetch posts to update comment count
-      console.log(res);
-
-    } catch (error) {
-      console.error("Error commenting on post:", error);
     }
   };
 
@@ -470,13 +483,61 @@ function page() {
                         <Heart color={likedPosts[data.id] ? "none" : "#14213D"} fill={likedPosts[data.id] ? "red" : "none"} className={`w-5 h-5 `} />
                         <p className="text-sm">{data.likes}</p>
                       </button>
-                      <button
-                        className="flex items-center gap-2 text-[#14213D]"
-                        onClick={() => handleComment(data.id, "NormalPost")}
-                      >
-                        <MessageSquare className="w-5 h-5" />
-                        <p className="text-sm">{data.comments}</p>
-                      </button>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <button
+                            className="flex items-center gap-2 text-[#14213D]"
+                            onClick={() => handleComment(data.id, "NormalPost")}
+                          >
+                            <MessageSquare className="w-5 h-5" />
+                            <p className="text-sm">{data.comments.length} Comments</p>
+                          </button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-xl">
+                          <DialogHeader>
+                            <DialogTitle>Post a Comment</DialogTitle>
+                            <DialogDescription>
+                              Share your thoughts on this post.
+                            </DialogDescription>
+                          </DialogHeader>
+
+                          {/* Display Comments */}
+                          <div className="py-4 space-y-4 overflow-y-auto h-96">
+                            {data.comments && data.comments.length > 0 ? (
+                              data.comments.map((comment) => (
+                                <div key={comment.id} className="p-4 border-b">
+                                  <p className="text-sm font-semibold">{comment.user?.fullname || 'Anonymous'}</p>
+                                  <p className="text-sm">{comment.message}</p>
+                                  <p className="text-xs text-gray-500">{new Date(comment.createdAt).toLocaleString()}</p>
+                                </div>
+                              ))
+                            ) : (
+                              <p>No comments yet. Be the first to share your thoughts!</p>
+                            )}
+                          </div>
+
+                          {/* Comment Input Section */}
+                          <form onSubmit={handleCommentSubmit} className="grid gap-4 py-4">
+                            <div className="grid items-center grid-cols-4 gap-4">
+                              <Label htmlFor="comment-message" className="text-right w-fit">
+                                Your Comment
+                              </Label>
+                              <Input
+                                id="comment-message"
+                                placeholder="Write your comment..."
+                                name="message"
+                                value={commentData.message}
+                                onChange={(e) => setCommentData({ ...commentData, message: e.target.value })}
+                                className="col-span-3"
+                              />
+                            </div>
+
+                            <DialogClose asChild>
+                              <Button type="submit">Post Comment</Button>
+                            </DialogClose>
+                          </form>
+                        </DialogContent>
+                      </Dialog>
                       <button className="flex items-center gap-2 text-[#14213D]">
                         <Share2 className="w-5 h-5" />
                         <p className="text-sm">Share</p>
