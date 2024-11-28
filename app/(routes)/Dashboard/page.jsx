@@ -39,23 +39,30 @@ function page() {
 
   const handleApply = async (postId) => {
     try {
+      // Optimistically update the UI
       setPosts((prevPosts) =>
         prevPosts.map((post) =>
-          post.id === postId ? { ...post, applied: !post.applied } : post
+          post.id === postId ? { ...post, applied: true } : post
         )
       );
 
+      // Make the API call
       await axios.post(`/api/jobApply`, { postId });
 
-      toast.success("Job Applied Successfully!");
-      fetchUserProfile();
-
+      toast.success("Job application submitted successfully!");
     } catch (error) {
+      // Rollback the UI in case of an error
       setPosts((prevPosts) =>
         prevPosts.map((post) =>
-          post.id === postId ? { ...post, applied: !post.applied } : post
+          post.id === postId ? { ...post, applied: false } : post
         )
       );
+
+      if (error.response?.status === 400) {
+        toast.error("You have already applied for this job.");
+      } else {
+        toast.error("Something went wrong. Please try again later.");
+      }
     }
   };
 
