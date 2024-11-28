@@ -19,7 +19,7 @@ function SignIn() {
 
     try {
       const res = await signIn('credentials', {
-        redirect: false,
+        redirect: true,
         rollno,
         password,
       });

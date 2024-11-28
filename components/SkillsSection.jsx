@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Plus, Trash2, Edit2 } from 'lucide-react';
 
 const SkillsSection = ({ posts }) => {
-  console.log(posts);
+
   const [skills, setSkills] = useState([
     {
       id: '1',

@@ -5,7 +5,6 @@ import axios from "axios";
 import { toast } from "sonner";
 
 const ProfileSection = ({ posts }) => {
-  // Initialize profile with posts or default values
   const [profile, setProfile] = useState({
     fullname: "",
     rollno: "",
@@ -19,7 +18,6 @@ const ProfileSection = ({ posts }) => {
     topSkill3: "",
   });
 
-  // Sync posts with profile when posts are updated
   useEffect(() => {
     if (posts) {
       setProfile({
@@ -30,9 +28,9 @@ const ProfileSection = ({ posts }) => {
         avatar: posts.avatar || "",
         shortBio: posts.shortBio || "",
         about: posts.about || "",
-        topSkill1: profile.topSkill || "",
-        topSkill2: profile.topSkill2 || "",
-        topSkill3: profile.topSkill3 || "",
+        topSkill1: profile.topSkills1 || "",
+        topSkill2: profile.topSkills2 || "",
+        topSkill3: profile.topSkills3 || "",
       });
     }
   }, [posts]);
@@ -48,9 +46,9 @@ const ProfileSection = ({ posts }) => {
         email: profile.email,
         shortBio: profile.shortBio,
         about: profile.about,
-        topSkill1: profile.topSkill1,
-        topSkill2: profile.topSkill2,
-        topSkill3: profile.topSkill3,
+        topSkill1: profile.topSkills1,
+        topSkill2: profile.topSkills2,
+        topSkill3: profile.topSkills3,
       });
 
       if (response.status === 200) {

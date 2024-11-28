@@ -29,7 +29,7 @@ function LeftSidebar() {
     <div className="fixed left-0 top-auto flex-col hidden h-screen gap-2 p-4 border-r shadow-xl xl:flex w-80">
       <div>
         {/* User Info */}
-        <Link href={`/Profile/${user.id}`} className="p-4 rounded-md hover:bg-neutral-100">
+        <Link href={`/Profile/${user.id}`} className="p-4">
           <div className="flex flex-col items-center">
             <img
               src={user.avatar}
