@@ -31,29 +31,6 @@ model User {
   updatedAt       DateTime          @updatedAt
 }
 
-model Chat {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  user1Id     String   @db.ObjectId
-  user2Id     String   @db.ObjectId
-  messages    Message[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  user1       User     @relation(fields: [user1Id], references: [id])
-  user2       User     @relation(fields: [user2Id], references: [id])
-}
-
-model Message {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  chatId    String   @db.ObjectId
-  senderId  String   @db.ObjectId
-  content   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  chat      Chat     @relation(fields: [chatId], references: [id])
-  sender    User     @relation(fields: [senderId], references: [id])
-}
-
-
 model JobApplications {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   status    String   @default("Applied")
