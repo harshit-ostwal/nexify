@@ -10,6 +10,7 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { formatDate } from '@/lib/utils';
+import Link from 'next/link';
 
 
 export function UserCard({ user }) {
@@ -42,13 +43,15 @@ export function UserCard({ user }) {
             </CardContent>
 
             <CardFooter className="flex gap-2">
-                <Button
-                    className="flex-1"
-                    variant="outline"
-                >
-                    <UserPlusIcon className="w-4 h-4 mr-2" />
-                    Connect
-                </Button>
+                <Link href={`/Profile/${user.id}`}>
+                    <Button
+                        className="flex-1"
+                        variant="outline"
+                    >
+                        <UserPlusIcon className="w-4 h-4 mr-2" />
+                        Connect
+                    </Button>
+                </Link>
                 <Button
                     className="flex-1"
                 >
