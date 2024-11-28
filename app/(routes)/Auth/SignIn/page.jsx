@@ -19,15 +19,15 @@ function SignIn() {
 
     try {
       const res = await signIn('credentials', {
-        redirect: false,
+        redirect: true,
+        callbackUrl: "/Dashboard",
         rollno,
         password,
       });
 
       console.log(res); // Logs the response for debugging
 
-      // Check if sign-in was successful
-      if (res?.ok) {
+      if (res.ok) {
         toast.success("Sign In Successful!");
         router.push('/Dashboard');
       } else if (res?.error) {
