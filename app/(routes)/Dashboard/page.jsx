@@ -553,13 +553,61 @@ function page() {
                         <Heart color={likedPosts[data.id] ? "none" : "#14213D"} fill={likedPosts[data.id] ? "red" : "none"} className={`w-5 h-5 `} />
                         <p className="text-sm">{data.likes}</p>
                       </button>
-                      <button
-                        className="flex items-center gap-2 text-[#14213D]"
-                        onClick={() => handleComment(data.id, "JobPost")}
-                      >
-                        <MessageSquare className="w-5 h-5" />
-                        <p className="text-sm">{data.comments}</p>
-                      </button>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <button
+                            className="flex items-center gap-2 text-[#14213D]"
+                            onClick={() => handleComment(data.id, "JobPost")}
+                          >
+                            <MessageSquare className="w-5 h-5" />
+                            <p className="text-sm">{data.comments.length} Comments</p>
+                          </button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-xl">
+                          <DialogHeader>
+                            <DialogTitle>Post a Comment</DialogTitle>
+                            <DialogDescription>
+                              Share your thoughts on this post.
+                            </DialogDescription>
+                          </DialogHeader>
+
+                          {/* Display Comments */}
+                          <div className="py-4 space-y-4 overflow-y-auto h-96">
+                            {data.comments && data.comments.length > 0 ? (
+                              data.comments.map((comment) => (
+                                <div key={comment.id} className="p-4 border-b">
+                                  <p className="text-sm font-semibold">{comment.user?.fullname || 'Anonymous'}</p>
+                                  <p className="text-sm">{comment.message}</p>
+                                  <p className="text-xs text-gray-500">{new Date(comment.createdAt).toLocaleString()}</p>
+                                </div>
+                              ))
+                            ) : (
+                              <p>No comments yet. Be the first to share your thoughts!</p>
+                            )}
+                          </div>
+
+                          {/* Comment Input Section */}
+                          <form onSubmit={handleCommentSubmit} className="grid gap-4 py-4">
+                            <div className="grid items-center grid-cols-4 gap-4">
+                              <Label htmlFor="comment-message" className="text-right w-fit">
+                                Your Comment
+                              </Label>
+                              <Input
+                                id="comment-message"
+                                placeholder="Write your comment..."
+                                name="message"
+                                value={commentData.message}
+                                onChange={(e) => setCommentData({ ...commentData, message: e.target.value })}
+                                className="col-span-3"
+                              />
+                            </div>
+
+                            <DialogClose asChild>
+                              <Button type="submit">Post Comment</Button>
+                            </DialogClose>
+                          </form>
+                        </DialogContent>
+                      </Dialog>
                       <button
                         className="flex items-center gap-2"
                         onClick={() => handleApply(data.id)} // Trigger handleApply
@@ -582,13 +630,61 @@ function page() {
                         <Heart color={likedPosts[data.id] ? "none" : "#14213D"} fill={likedPosts[data.id] ? "red" : "none"} className={`w-5 h-5 `} />
                         <p className="text-sm">{data.likes}</p>
                       </button>
-                      <button
-                        className="flex items-center gap-2 text-[#14213D]"
-                        onClick={() => handleComment(data.id, "ProjectPost")}
-                      >
-                        <MessageSquare className="w-5 h-5" />
-                        <p className="text-sm">{data.comments}</p>
-                      </button>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <button
+                            className="flex items-center gap-2 text-[#14213D]"
+                            onClick={() => handleComment(data.id, "ProjectPost")}
+                          >
+                            <MessageSquare className="w-5 h-5" />
+                            <p className="text-sm">{data.comments.length} Comments</p>
+                          </button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-xl">
+                          <DialogHeader>
+                            <DialogTitle>Post a Comment</DialogTitle>
+                            <DialogDescription>
+                              Share your thoughts on this post.
+                            </DialogDescription>
+                          </DialogHeader>
+
+                          {/* Display Comments */}
+                          <div className="py-4 space-y-4 overflow-y-auto h-96">
+                            {data.comments && data.comments.length > 0 ? (
+                              data.comments.map((comment) => (
+                                <div key={comment.id} className="p-4 border-b">
+                                  <p className="text-sm font-semibold">{comment.user?.fullname || 'Anonymous'}</p>
+                                  <p className="text-sm">{comment.message}</p>
+                                  <p className="text-xs text-gray-500">{new Date(comment.createdAt).toLocaleString()}</p>
+                                </div>
+                              ))
+                            ) : (
+                              <p>No comments yet. Be the first to share your thoughts!</p>
+                            )}
+                          </div>
+
+                          {/* Comment Input Section */}
+                          <form onSubmit={handleCommentSubmit} className="grid gap-4 py-4">
+                            <div className="grid items-center grid-cols-4 gap-4">
+                              <Label htmlFor="comment-message" className="text-right w-fit">
+                                Your Comment
+                              </Label>
+                              <Input
+                                id="comment-message"
+                                placeholder="Write your comment..."
+                                name="message"
+                                value={commentData.message}
+                                onChange={(e) => setCommentData({ ...commentData, message: e.target.value })}
+                                className="col-span-3"
+                              />
+                            </div>
+
+                            <DialogClose asChild>
+                              <Button type="submit">Post Comment</Button>
+                            </DialogClose>
+                          </form>
+                        </DialogContent>
+                      </Dialog>
                       <button className="flex items-center gap-2 text-[#14213D]">
                         <Paperclip className="w-5 h-5" />
                         <p className="text-sm">Collab</p>
