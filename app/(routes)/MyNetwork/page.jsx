@@ -11,46 +11,33 @@ function App() {
     const [searchQuery, setSearchQuery] = useState('');
     const [sortBy, setSortBy] = useState('name');
 
-    // const fetchUsers = async () => {
-    //     try {
-    //         const response = await axios.get('/api/users');
-    //         setUsers(response.data.users);
-    //     } catch (error) {
-    //         console.error('Error fetching users:', error);
-    //         toast('Failed to fetch users. Please try again later.');
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
+    const fetchUsers = async () => {
+        try {
+            const response = await axios.get('/api/users');
+            setUsers(response.data.user);
+        } catch (error) {
+            toast('Failed to fetch users. Please try again later.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    // useEffect(() => {
-    //     fetchUsers();
-    // }, []);
+    console.log(users);
 
-    // const handleConnect = async (userId) => {
-    //     try {
-    //         await axios.post(`/api/connections/${userId}`);
-    //         toast('Your connection request has been sent successfully.');
-    //     } catch (error) {
-    //         console.error('Error connecting with user:', error);
-    //         toast('Failed to send connection request. Please try again later.');
-    //     }
-    // };
-
-    // const handleMessage = (userId) => {
-    //     toast('Messaging feature will be available soon!');
-    // };
+    useEffect(() => {
+        fetchUsers();
+    }, []);
 
     const filteredUsers = users
         .filter((user) =>
-            user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            user.fullname.toLowerCase().includes(searchQuery.toLowerCase()) ||
             user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
             user.location?.toLowerCase().includes(searchQuery.toLowerCase())
         )
         .sort((a, b) => {
             switch (sortBy) {
                 case 'name':
-                    return a.name.localeCompare(b.name);
+                    return a.fullname.localeCompare(b.fullname);
                 case 'recent':
                     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
                 case 'location':
@@ -90,8 +77,6 @@ function App() {
                         <UserCard
                             key={user.id}
                             user={user}
-                            onConnect={handleConnect}
-                            onMessage={handleMessage}
                         />
                     ))}
                 </div>
