@@ -24,17 +24,24 @@ function SignIn() {
         password,
       });
 
-      router.push('/Dashboard');
-      if (res) {
+      console.log(res); // Logs the response for debugging
+
+      // Check if sign-in was successful
+      if (res?.ok) {
         toast.success("Sign In Successful!");
-      } else if (res && res.error) {
+        router.push('/Dashboard');
+      } else if (res?.error) {
+        // If there's an error, show the appropriate message
         const errorMessage = JSON.parse(res.error)?.message || "Invalid credentials.";
         toast.error(errorMessage);
       } else {
+        // In case no response is received
         toast.error("Sign In Failed. Please try again.");
       }
     } catch (err) {
+      // Catch any unexpected errors
       toast.error("An unexpected error occurred. Please try again.");
+      console.error(err); // Log the error for debugging
     }
   };
 

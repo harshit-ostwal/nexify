@@ -10,7 +10,6 @@ export const authOptions = {
             async authorize(credentials) {
                 const { rollno, password } = credentials;
 
-                // Validate input
                 if (!rollno || !password) {
                     throw new Error(JSON.stringify({
                         status: 400,
@@ -18,7 +17,6 @@ export const authOptions = {
                     }));
                 }
 
-                // Find user by roll number
                 const user = await prisma.user.findUnique({
                     where: { rollno },
                 }).catch(() => null);
@@ -30,7 +28,6 @@ export const authOptions = {
                     }));
                 }
 
-                // Validate password
                 const isPasswordValid = await bcrypt.compare(password, user.password);
                 if (!isPasswordValid) {
                     throw new Error(JSON.stringify({
@@ -39,7 +36,6 @@ export const authOptions = {
                     }));
                 }
 
-                // Return user data
                 return user;
             }
         }),
