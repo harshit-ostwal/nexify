@@ -19,7 +19,7 @@ function SignIn() {
 
     try {
       const res = await signIn('credentials', {
-        redirect: true,
+        redirect: false,
         rollno,
         password,
       });
@@ -35,7 +35,6 @@ function SignIn() {
       }
     } catch (err) {
       toast.error("An unexpected error occurred. Please try again.");
-      console.error(err);
     }
   };
 
